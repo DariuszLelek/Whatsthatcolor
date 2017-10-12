@@ -9,78 +9,80 @@
     tools:context="com.omikronsoft.whatsthatcolor.activity.MainActivity">
 
 
-    <FrameLayout
-        android:id="@+id/layout_camera"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
-
-        <com.flurgle.camerakit.CameraView
-            android:id="@+id/camera_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            app:srcCompat="@android:drawable/btn_dialog"/>
-
-        <ImageView
-            android:id="@+id/image_mask"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/camera_mask"
-            android:visibility="visible"
-            app:srcCompat="@android:color/transparent"/>
-
-    </FrameLayout>
-
     <LinearLayout
-        android:id="@+id/layout_control_panel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/control_panel_mask_size"
-            android:textAlignment="center"/>
-
-        <SeekBar
-            android:id="@+id/seek_mask_size"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/control_panel_refresh"
-            android:textAlignment="center"/>
-
-        <SeekBar
-            android:id="@+id/seek_refresh"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <Button
-            android:id="@+id/button_take_picture"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Start Capture"/>
-
-        <Button
-            android:id="@+id/btn_end"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="End Capture"/>
-
-        <ImageView
-            android:id="@+id/image_camera"
+        <FrameLayout
+            android:id="@+id/layout_camera"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/camera_content"
-            />
+            android:layout_weight="1">
+
+            <com.flurgle.camerakit.CameraView
+                android:id="@+id/camera_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                app:srcCompat="@android:drawable/btn_dialog"/>
+
+            <ImageView
+                android:id="@+id/image_mask"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/camera_mask"
+                android:visibility="visible"
+                app:srcCompat="@android:color/transparent"/>
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_control_panel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Red"
+                android:textAlignment="center"
+                android:textSize="24sp"/>
+
+            <ToggleButton
+                android:id="@+id/toggle_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:textOff="@string/toggle_button_off"
+                android:textOn="@string/toggle_button_on"
+                />
+
+            <SeekBar
+                android:id="@+id/seek_mask_size"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:id="@+id/image_camera"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:contentDescription="@string/camera_content"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_ad_holder"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="vertical">
     </LinearLayout>
 
 </LinearLayout>

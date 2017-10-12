@@ -4,4 +4,9 @@
     <string name="control_panel_mask_size">Mask size</string>
     <string name="camera_content">Camera content</string>
     <string name="camera_mask">Camera mask</string>
+    <string name="color_title">My guess is</string>
+    <string name="toggle_button_on">Stop</string>
+    <string name="toggle_button_off">Start</string>
+
+
 </resources>
