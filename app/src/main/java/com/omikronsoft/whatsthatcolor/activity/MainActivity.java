@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                 int mHeight = (int)maskRect.height();
 
                 final Bitmap crop = Bitmap.createBitmap(result, (width/2) - mWidth/2, (height/2) - mHeight/2, mWidth, mHeight);
-                final Bitmap colorBitmap =  Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+                final Bitmap colorBitmap =  Bitmap.createBitmap(imageCamera.getWidth(), imageCamera.getHeight(), Bitmap.Config.ARGB_8888);
                 Canvas canvas = new Canvas(colorBitmap);
                 canvas.drawColor(ColorUtility.getAverageColor(crop));
 
