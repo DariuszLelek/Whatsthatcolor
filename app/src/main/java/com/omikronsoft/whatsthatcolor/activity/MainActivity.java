@@ -1,15 +1,10 @@
 package com.omikronsoft.whatsthatcolor.activity;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.RectF;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -29,37 +24,23 @@ import static com.flurgle.camerakit.CameraKit.Constants.METHOD_STILL;
 
 public class MainActivity extends AppCompatActivity {
     private ImageView imageCamera, imageMask;
-
     private CameraView cameraView;
     private CameraMask cameraMask;
     private SeekBar maskSeekBar;
-
-    // TODO clean the mess in this cass before start working
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.CAMERA},
-                    PackageManager.PERMISSION_GRANTED);
-        }
-
-        cameraView = (CameraView) findViewById(R.id.camera_view);
-        cameraView.setMethod(METHOD_STILL);
+        requestPermissions();
 
         imageCamera = (ImageView) findViewById(R.id.image_camera);
         imageMask = (ImageView) findViewById(R.id.image_mask);
         maskSeekBar = (SeekBar) findViewById(R.id.seek_mask_size);
+        cameraView = (CameraView) findViewById(R.id.camera_view);
 
-        // TODO handle this max to be same as in CameraMask
-        maskSeekBar.setMax(50);
-
-
+        cameraView.setMethod(METHOD_STILL);
         imageMask.post(new Runnable() {
             @Override
             public void run() {
@@ -67,29 +48,76 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        prepareCameraViewListener(cameraView);
+        prepareSeekBars();
+        setSeekBarDefaultPositions();
 
-        Button takePic = (Button) findViewById(R.id.button_take_picture);
+        // TODO remove that after testing
+        prepareTestButton();
+    }
 
-        takePic.setOnClickListener(new View.OnClickListener() {
+    private void prepareTestButton(){
+        Button testButton = (Button)findViewById(R.id.button_take_picture);
+        testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imageMask.setImageBitmap(cameraMask.getMaskBitmap(maskSeekBar.getProgress() / 100F));
-
                 cameraView.captureImage();
             }
         });
+    }
 
+    private void requestPermissions(){
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    PackageManager.PERMISSION_GRANTED);
+        }
+    }
+
+    private void prepareSeekBars(){
+        maskSeekBar.setMax((int)(CameraMask.MAX_MASK_SCALE_PERCENT));
+        maskSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                ViewUtility.updateViewWithCameraMaskValue(imageMask, cameraMask, progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+               ViewUtility.updateViewWithCameraMaskValue(imageMask, cameraMask, maskSeekBar.getProgress());
+            }
+        });
+    }
+
+    private void setSeekBarDefaultPositions(){
+        maskSeekBar.post(new Runnable() {
+            @Override
+            public void run() {
+                maskSeekBar.setProgress(maskSeekBar.getMax()/2);
+            }
+        });
+    }
+
+    private void prepareCameraViewListener(CameraView cameraView){
         cameraView.setCameraListener(new CameraListener() {
             @Override
             public void onPictureTaken(byte[] picture) {
-
-                // test preview
                 final Bitmap result = BitmapFactory.decodeByteArray(picture, 0, picture.length);
+                RectF maskRect = cameraMask.getCurrentMaskRect();
 
                 int height = result.getHeight();
                 int width = result.getWidth();
+                int mWidth = (int)maskRect.width();
+                int mHeight = (int)maskRect.height();
 
-                final Bitmap crop = Bitmap.createBitmap(result, (width/2) - 30, (height/2) - 30,60, 60);
+                final Bitmap crop = Bitmap.createBitmap(result, (width/2) - mWidth/2, (height/2) - mHeight/2, mWidth, mHeight);
 
                 runOnUiThread(new Runnable() {
                     @Override
