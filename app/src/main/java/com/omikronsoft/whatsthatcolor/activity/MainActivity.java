@@ -77,11 +77,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void prepareSeekBars(){
-        maskSeekBar.setMax((int)(CameraMask.MAX_MASK_SCALE_PERCENT));
+        maskSeekBar.setMax((CameraMask.MAX_MASK_SCALE_PERCENT));
         maskSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                ViewUtility.updateViewWithCameraMaskValue(imageMask, cameraMask, progress);
+                if(ViewUtility.canUpdate(imageMask, 200)){
+                    ViewUtility.updateViewWithCameraMaskValue(imageMask, cameraMask, progress);
+                }
             }
 
             @Override
@@ -91,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-               ViewUtility.updateViewWithCameraMaskValue(imageMask, cameraMask, maskSeekBar.getProgress());
+                ViewUtility.updateViewWithCameraMaskValue(imageMask, cameraMask, maskSeekBar.getProgress());
             }
         });
     }

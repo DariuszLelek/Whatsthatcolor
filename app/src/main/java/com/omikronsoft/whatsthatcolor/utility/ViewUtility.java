@@ -31,11 +31,9 @@ public class ViewUtility {
         return bitmap;
     }
 
-    public static void updateViewWithCameraMaskValue(ImageView view, CameraMask cameraMask, int value){
-        if(canUpdate(view, 200)){
-            view.setImageBitmap(cameraMask.getMaskBitmap(value / 100F));
-            viewLastUpdate.put(view, DateTime.now());
-        }
+    public static void updateViewWithCameraMaskValue(ImageView view, CameraMask cameraMask, int value) {
+        view.setImageBitmap(cameraMask.getMaskBitmap(value));
+        viewLastUpdate.put(view, DateTime.now());
     }
 
     public static boolean canUpdate(View view, int delayMS){

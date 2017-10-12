@@ -43,8 +43,8 @@ public class CameraMask {
         Bitmap bitmap = Bitmap.createBitmap(cameraMaskBackground);
         Canvas canvas = new Canvas(bitmap);
 
-        float left = width2 - width2 * scale;
-        float top = height2 - height2 * scale;
+        float left = width2 - width2 * scale / 100F;
+        float top = height2 - height2 * scale / 100F;
         float right = width - left;
         float bottom = height - top;
 
