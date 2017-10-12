@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private CameraView cameraView;
     private CameraMask cameraMask;
     private SeekBar maskSeekBar;
+    private ToggleButton toggleButton;
 
     private final int cameraMaskUpdateDelayMS = 200;
     private final int cameraCapturePictureDelayMS = 500;
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         cameraView = (CameraView) findViewById(R.id.camera_view);
 
         ImageView imageClose = (ImageView) findViewById(R.id.image_close);
-        ToggleButton toggleButton = (ToggleButton) findViewById(R.id.toggle_button);
+        toggleButton = (ToggleButton) findViewById(R.id.toggle_button);
 
         cameraView.setMethod(METHOD_STILL);
         imageMask.post(new Runnable() {
@@ -166,12 +167,12 @@ public class MainActivity extends AppCompatActivity {
                 Canvas canvas = new Canvas(colorBitmap);
                 canvas.drawColor(ColorUtility.getAverageColor(crop));
 
-                // TODO process image
+                crop.recycle();
+                result.recycle();
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        // testing output
                         imageAverageColor.setImageBitmap(colorBitmap);
                     }
                 });
@@ -188,6 +189,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
+        toggleButton.setChecked(false);
+        shutDownExecutor();
+
         cameraView.stop();
         super.onPause();
     }
