@@ -14,18 +14,19 @@ import android.graphics.RectF;
 public class CameraMask {
     public final static int MAX_MASK_SCALE_PERCENT = 50;
     private final static int MIN_MASK_SCALE_PERCENT = 1;
-    private final static float PAINT_STROKE_WIDTH = 1F;
-    private final static int PAINT_COLOR = Color.RED;
+    private final static float PAINT_STROKE_WIDTH = 4F;
 
     private final Paint paint = new Paint();
 
     private RectF currentMaskRect;
 
-    private Bitmap cameraMaskBackground;
+    private final int paintColor;
+    private final Bitmap cameraMaskBackground;
     private int width, height, width2, height2;
 
-    public CameraMask(Bitmap cameraMaskBackground) {
+    public CameraMask(Bitmap cameraMaskBackground, int paintColor) {
         this.cameraMaskBackground = cameraMaskBackground;
+        this.paintColor = paintColor;
 
         preparePaint();
         prepareBackgroundConstants();
@@ -71,7 +72,7 @@ public class CameraMask {
     }
 
     private void preparePaint(){
-        paint.setColor(PAINT_COLOR);
+        paint.setColor(paintColor);
         paint.setStrokeWidth(PAINT_STROKE_WIDTH);
     }
 }

@@ -61,7 +61,8 @@ public class MainActivity extends AppCompatActivity {
         imageMask.post(new Runnable() {
             @Override
             public void run() {
-                cameraMask = new CameraMask(ViewUtility.getBitmapFromView(imageMask));
+                int maskColor = ContextCompat.getColor(getApplicationContext(), R.color.color_mask_rectangle);
+                cameraMask = new CameraMask(ViewUtility.getBitmapFromView(imageMask), maskColor);
             }
         });
 
