@@ -11,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -28,16 +27,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static android.R.attr.bitmap;
 import static com.flurgle.camerakit.CameraKit.Constants.METHOD_STILL;
 
 public class MainActivity extends AppCompatActivity {
-    private ImageView imageCamera, imageMask;
+    private ImageView imageAverageColor;
+    private ImageView imageMask;
     private CameraView cameraView;
     private CameraMask cameraMask;
     private SeekBar maskSeekBar;
-    private ToggleButton toggleButton;
-    private boolean running;
 
     private final int cameraMaskUpdateDelayMS = 200;
     private final int cameraCapturePictureDelayMS = 500;
@@ -51,13 +48,13 @@ public class MainActivity extends AppCompatActivity {
 
         requestPermissions();
 
-        running = false;
-
-        imageCamera = (ImageView) findViewById(R.id.image_camera);
+        imageAverageColor = (ImageView) findViewById(R.id.image_average_color);
         imageMask = (ImageView) findViewById(R.id.image_mask);
         maskSeekBar = (SeekBar) findViewById(R.id.seek_mask_size);
         cameraView = (CameraView) findViewById(R.id.camera_view);
-        toggleButton = (ToggleButton) findViewById(R.id.toggle_button);
+
+        ImageView imageClose = (ImageView) findViewById(R.id.image_close);
+        ToggleButton toggleButton = (ToggleButton) findViewById(R.id.toggle_button);
 
         cameraView.setMethod(METHOD_STILL);
         imageMask.post(new Runnable() {
@@ -67,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        prepareImageCloseListener(imageClose);
         prepareToggleButtonListener(toggleButton);
         prepareCameraViewListener(cameraView);
         prepareSeekBar();
@@ -115,6 +113,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void prepareImageCloseListener(ImageView view){
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shutDownExecutor();
+                cameraView.stop();
+                finish();
+            }
+        });
+    }
+
     private void prepareToggleButtonListener(ToggleButton toggleButton){
         toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -128,12 +137,16 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }, 0, cameraCapturePictureDelayMS, TimeUnit.MILLISECONDS);
                 }else{
-                    if(executor != null && !executor.isShutdown()){
-                        executor.shutdownNow();
-                    }
+                    shutDownExecutor();
                 }
             }
         });
+    }
+
+    private void shutDownExecutor(){
+        if(executor != null && !executor.isShutdown()){
+            executor.shutdownNow();
+        }
     }
 
     private void prepareCameraViewListener(CameraView cameraView){
@@ -149,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                 int mHeight = (int)maskRect.height();
 
                 final Bitmap crop = Bitmap.createBitmap(result, (width/2) - mWidth/2, (height/2) - mHeight/2, mWidth, mHeight);
-                final Bitmap colorBitmap =  Bitmap.createBitmap(imageCamera.getWidth(), imageCamera.getHeight(), Bitmap.Config.ARGB_8888);
+                final Bitmap colorBitmap =  Bitmap.createBitmap(imageAverageColor.getWidth(), imageAverageColor.getHeight(), Bitmap.Config.ARGB_8888);
                 Canvas canvas = new Canvas(colorBitmap);
                 canvas.drawColor(ColorUtility.getAverageColor(crop));
 
@@ -159,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         // testing output
-                        imageCamera.setImageBitmap(colorBitmap);
+                        imageAverageColor.setImageBitmap(colorBitmap);
                     }
                 });
             }

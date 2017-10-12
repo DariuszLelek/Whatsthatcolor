@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@color/color_background"
         android:orientation="vertical"
@@ -38,6 +38,16 @@
                 android:visibility="visible"
                 app:srcCompat="@android:color/transparent"/>
 
+            <ImageView
+                android:id="@+id/image_close"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="end"
+                android:contentDescription="@string/image_close"
+                android:background="@color/color_image_close_back"
+                android:cropToPadding="false"
+                app:srcCompat="@drawable/ic_close_black_200dp"/>
+
         </FrameLayout>
 
         <LinearLayout
@@ -49,21 +59,21 @@
             android:paddingTop="4dp">
 
             <ImageView
-                android:id="@+id/image_camera"
+                android:id="@+id/image_average_color"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:contentDescription="@string/camera_content"
-                />
+                android:background="@color/color_text"
+                android:contentDescription="@string/camera_content"/>
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/text_color"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="serif"
                 android:paddingBottom="6dp"
                 android:paddingTop="12dp"
-                android:text="Red"
+                android:text="@string/color_placeholder"
                 android:textAlignment="center"
                 android:textColor="@color/color_text"
                 android:textSize="40sp"
