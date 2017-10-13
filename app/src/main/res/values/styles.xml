@@ -1,15 +1,6 @@
 <resources>
-
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-        <!--<item name="android:windowFullscreen">true</item>-->
-        <!--<item name="android:windowContentOverlay">@null</item>-->
     </style>
-
-    <style name="CustomSeekBar" parent="Widget.AppCompat.SeekBar">
-        <item name="colorAccent">#ffff00</item>
-    </style>
-
 </resources>

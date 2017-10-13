@@ -5,6 +5,7 @@
     <string name="camera_content">Camera content</string>
     <string name="camera_mask">Camera mask</string>
     <string name="image_close">Close image</string>
+    <string name="image_color_range">Color Range image</string>
     <string name="color_title">My guess is</string>
     <string name="toggle_button_on">stop</string>
     <string name="toggle_button_off">start</string>

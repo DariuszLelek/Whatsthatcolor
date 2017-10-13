@@ -52,7 +52,8 @@
                 android:id="@+id/image_color"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_gravity="bottom|right"
+                android:layout_gravity="bottom|end"
+                android:contentDescription="@string/image_color_range"
                 android:background="@color/color_image_close_back"
                 app:srcCompat="@mipmap/color_max"/>
 
