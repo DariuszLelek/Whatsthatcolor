@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Whats that color</string>
+    <string name="app_name">What Color</string>
     <string name="control_panel_refresh">Refresh</string>
     <string name="control_panel_mask_size">Mask size</string>
     <string name="camera_content">Camera content</string>
