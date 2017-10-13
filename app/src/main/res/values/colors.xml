@@ -3,6 +3,6 @@
     <color name="color_background">#fbfbff</color>
     <color name="color_toggle">#20BF55</color>
     <color name="color_text">#0b4f6c</color>
-    <color name="color_image_close_back">#42ffffff</color>
+    <color name="color_image_back">#32ffffff</color>
     <color name="color_mask_rectangle">#01BAEF</color>
 </resources>

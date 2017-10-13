@@ -32,22 +32,20 @@ import java.util.concurrent.TimeUnit;
 import static com.flurgle.camerakit.CameraKit.Constants.METHOD_STILL;
 
 public class MainActivity extends AppCompatActivity {
-    private ImageView imageAverageColor;
-    private ImageView imageColor;
-    private ImageView imageMask;
+    private ImageView imageAverageColor, imageColor, imageMask;
     private CameraView cameraView;
     private CameraMask cameraMask;
     private SeekBar maskSeekBar;
     private ToggleButton toggleButton;
     private TextView textColor;
-    private ColorRange currentColorRange = ColorRange.MAX;
 
     private final int cameraMaskUpdateDelayMS = 200;
     private final int cameraCapturePictureDelayMS = 500;
-    private ScheduledExecutorService executor;
 
+    private ScheduledExecutorService executor;
     private ColorUtility colorUtility;
 
+    private ColorRange currentColorRange = ColorRange.MAX;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,9 +155,7 @@ public class MainActivity extends AppCompatActivity {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shutDownExecutor();
-                cameraView.stop();
-                finish();
+                finishActivity();
             }
         });
     }
@@ -235,6 +231,12 @@ public class MainActivity extends AppCompatActivity {
         return Bitmap.createBitmap(result, (width / 2) - mWidth / 2, (height / 2) - mHeight / 2, mWidth, mHeight);
     }
 
+    private void finishActivity(){
+        toggleButton.setChecked(false);
+        shutDownExecutor();
+        cameraView.stop();
+        finish();
+    }
 
     @Override
     protected void onResume() {
@@ -244,10 +246,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        toggleButton.setChecked(false);
-        shutDownExecutor();
-
-        cameraView.stop();
+        // TODO check if can be done without finishing activity (got problems with on resume otherwise)
+        finishActivity();
         super.onPause();
     }
 }

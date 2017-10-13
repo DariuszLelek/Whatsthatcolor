@@ -44,7 +44,7 @@
                 android:layout_height="60dp"
                 android:layout_gravity="end"
                 android:contentDescription="@string/image_close"
-                android:background="@color/color_image_close_back"
+                android:background="@color/color_image_back"
                 android:cropToPadding="false"
                 app:srcCompat="@drawable/ic_close_black_200dp"/>
 
@@ -54,7 +54,7 @@
                 android:layout_height="60dp"
                 android:layout_gravity="bottom|end"
                 android:contentDescription="@string/image_color_range"
-                android:background="@color/color_image_close_back"
+                android:background="@color/color_image_back"
                 app:srcCompat="@mipmap/color_max"/>
 
         </FrameLayout>
