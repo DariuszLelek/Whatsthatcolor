@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--extended colors-->
     <string-array name="color_max_name">
         <item>alice blue</item>
         <item>antique white</item>
@@ -820,11 +821,53 @@
         <item>#8b8b00</item>
         <item>#9acd32</item>
     </string-array>
-
+    <!--basic colors-->
     <string-array name="color_min_name">
-
+        <item>red</item>
+        <item>green</item>
+        <item>yellow</item>
+        <item>blue</item>
+        <item>orange</item>
+        <item>purple</item>
+        <item>cyan</item>
+        <item>magenta</item>
+        <item>lime</item>
+        <item>pink</item>
+        <item>teal</item>
+        <item>lavender</item>
+        <item>brown</item>
+        <item>beige</item>
+        <item>maroon</item>
+        <item>mint</item>
+        <item>olive</item>
+        <item>coral</item>
+        <item>navy</item>
+        <item>grey</item>
+        <item>white</item>
+        <item>black</item>
     </string-array>
     <string-array name="color_min_value">
-
+        <item>#e6194b</item>
+        <item>#3cb44b</item>
+        <item>#ffe119</item>
+        <item>#0082c8</item>
+        <item>#f58231</item>
+        <item>#911eb4</item>
+        <item>#46f0f0</item>
+        <item>#f032e6</item>
+        <item>#d2f53c</item>
+        <item>#fabebe</item>
+        <item>#008080</item>
+        <item>#e6beff</item>
+        <item>#aa6e28</item>
+        <item>#fffac8</item>
+        <item>#800000</item>
+        <item>#aaffc3</item>
+        <item>#808000</item>
+        <item>#ffd8b1</item>
+        <item>#000080</item>
+        <item>#808080</item>
+        <item>#FFFFFF</item>
+        <item>#000000</item>
     </string-array>
 </resources>
