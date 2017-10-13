@@ -6,9 +6,7 @@
     <string name="camera_mask">Camera mask</string>
     <string name="image_close">Close image</string>
     <string name="color_title">My guess is</string>
-    <string name="toggle_button_on">Stop</string>
-    <string name="toggle_button_off">Start</string>
-
-    <string name="color_placeholder">Some Color</string>
-
+    <string name="toggle_button_on">stop</string>
+    <string name="toggle_button_off">start</string>
+    <string name="color_placeholder">press start</string>
 </resources>

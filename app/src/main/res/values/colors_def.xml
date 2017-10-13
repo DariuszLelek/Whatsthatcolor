@@ -842,7 +842,7 @@
         <item>olive</item>
         <item>coral</item>
         <item>navy</item>
-        <item>grey</item>
+        <!--<item>grey</item>-->
         <item>white</item>
         <item>black</item>
     </string-array>
@@ -866,7 +866,7 @@
         <item>#808000</item>
         <item>#ffd8b1</item>
         <item>#000080</item>
-        <item>#808080</item>
+        <!--<item>#808080</item>-->
         <item>#FFFFFF</item>
         <item>#000000</item>
     </string-array>

@@ -32,14 +32,15 @@ import java.util.concurrent.TimeUnit;
 import static com.flurgle.camerakit.CameraKit.Constants.METHOD_STILL;
 
 public class MainActivity extends AppCompatActivity {
-    private ImageView imageAverageColor, imageClose, imageColor;
+    private ImageView imageAverageColor;
+    private ImageView imageColor;
     private ImageView imageMask;
     private CameraView cameraView;
     private CameraMask cameraMask;
     private SeekBar maskSeekBar;
     private ToggleButton toggleButton;
     private TextView textColor;
-    private ColorRange currentColorRange;
+    private ColorRange currentColorRange = ColorRange.MAX;
 
     private final int cameraMaskUpdateDelayMS = 200;
     private final int cameraCapturePictureDelayMS = 500;
@@ -57,19 +58,17 @@ public class MainActivity extends AppCompatActivity {
 
         colorUtility = new ColorUtility(getApplicationContext());
 
-        currentColorRange = ColorRange.MAX;
-
         imageAverageColor = (ImageView) findViewById(R.id.image_average_color);
-        imageMask = (ImageView) findViewById(R.id.image_mask);
         maskSeekBar = (SeekBar) findViewById(R.id.seek_mask_size);
-        cameraView = (CameraView) findViewById(R.id.camera_view);
         textColor = (TextView) findViewById(R.id.text_color);
 
-        imageClose = (ImageView) findViewById(R.id.image_close);
-        imageColor = (ImageView) findViewById(R.id.image_color);
-        toggleButton = (ToggleButton) findViewById(R.id.toggle_button);
+        prepareImageMask();
+        prepareItemsWithListeners();
+        prepareSeekBar();
+    }
 
-        cameraView.setMethod(METHOD_STILL);
+    private void prepareImageMask() {
+        imageMask = (ImageView) findViewById(R.id.image_mask);
         imageMask.post(new Runnable() {
             @Override
             public void run() {
@@ -77,15 +76,23 @@ public class MainActivity extends AppCompatActivity {
                 cameraMask = new CameraMask(ViewUtility.getBitmapFromView(imageMask), maskColor);
             }
         });
-
-        prepareImageCloseListener(imageClose);
-        prepareImageColorListener(imageColor);
-        prepareToggleButtonListener(toggleButton);
-        prepareCameraViewListener(cameraView);
-        prepareSeekBar();
     }
 
-    private void requestPermissions(){
+    private void prepareItemsWithListeners() {
+        prepareImageCloseListener((ImageView) findViewById(R.id.image_close));
+
+        imageColor = (ImageView) findViewById(R.id.image_color);
+        prepareImageColorListener(imageColor);
+
+        toggleButton = (ToggleButton) findViewById(R.id.toggle_button);
+        prepareToggleButtonListener(toggleButton);
+
+        cameraView = (CameraView) findViewById(R.id.camera_view);
+        cameraView.setMethod(METHOD_STILL);
+        prepareCameraViewListener(cameraView);
+    }
+
+    private void requestPermissions() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -95,12 +102,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void prepareSeekBar(){
+    private void prepareSeekBar() {
         maskSeekBar.setMax((CameraMask.MAX_MASK_SCALE_PERCENT));
         maskSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if(ViewUtility.canUpdate(imageMask, cameraMaskUpdateDelayMS)){
+                if (ViewUtility.canUpdate(imageMask, cameraMaskUpdateDelayMS)) {
                     ViewUtility.updateViewWithCameraMaskValue(imageMask, cameraMask, progress);
                 }
             }
@@ -119,24 +126,24 @@ public class MainActivity extends AppCompatActivity {
         setSeekBarDefaultPosition();
     }
 
-    private void setSeekBarDefaultPosition(){
+    private void setSeekBarDefaultPosition() {
         maskSeekBar.post(new Runnable() {
             @Override
             public void run() {
-                maskSeekBar.setProgress(maskSeekBar.getMax()/2);
+                maskSeekBar.setProgress(maskSeekBar.getMax() / 2);
             }
         });
     }
 
-    private void flipCurrentColorRange(){
+    private void flipCurrentColorRange() {
         currentColorRange = currentColorRange == ColorRange.MAX ? ColorRange.MIN : ColorRange.MAX;
     }
 
-    private int getCurrentColorRangeMipmap(){
+    private int getCurrentColorRangeMipmap() {
         return currentColorRange == ColorRange.MAX ? R.mipmap.color_max : R.mipmap.color_min;
     }
 
-    private void prepareImageColorListener(ImageView view){
+    private void prepareImageColorListener(ImageView view) {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void prepareImageCloseListener(ImageView view){
+    private void prepareImageCloseListener(ImageView view) {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -157,11 +164,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void prepareToggleButtonListener(ToggleButton toggleButton){
+    private void prepareToggleButtonListener(ToggleButton toggleButton) {
         toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     executor = Executors.newScheduledThreadPool(1);
                     executor.scheduleAtFixedRate(new Runnable() {
                         @Override
@@ -169,51 +176,63 @@ public class MainActivity extends AppCompatActivity {
                             cameraView.captureImage();
                         }
                     }, 0, cameraCapturePictureDelayMS, TimeUnit.MILLISECONDS);
-                }else{
+                } else {
                     shutDownExecutor();
                 }
             }
         });
     }
 
-    private void shutDownExecutor(){
-        if(executor != null && !executor.isShutdown()){
+    private void shutDownExecutor() {
+        if (executor != null && !executor.isShutdown()) {
             executor.shutdownNow();
         }
     }
 
-    private void prepareCameraViewListener(CameraView cameraView){
+    private void prepareCameraViewListener(CameraView cameraView) {
         cameraView.setCameraListener(new CameraListener() {
             @Override
             public void onPictureTaken(byte[] picture) {
-                final Bitmap result = BitmapFactory.decodeByteArray(picture, 0, picture.length);
-                RectF maskRect = cameraMask.getCurrentMaskRect();
-
-                int height = result.getHeight();
-                int width = result.getWidth();
-                int mWidth = (int)maskRect.width();
-                int mHeight = (int)maskRect.height();
-
-                final Bitmap crop = Bitmap.createBitmap(result, (width/2) - mWidth/2, (height/2) - mHeight/2, mWidth, mHeight);
-                final Bitmap colorBitmap =  Bitmap.createBitmap(imageAverageColor.getWidth(), imageAverageColor.getHeight(), Bitmap.Config.ARGB_8888);
-                Canvas canvas = new Canvas(colorBitmap);
-
-                int avgColor = colorUtility.getAverageColor(crop);
+                final Bitmap cropBitmap = getCropBitmap(picture);
+                final Bitmap colorBitmap = getPlainColorBitmap();
+                final Canvas canvas = new Canvas(colorBitmap);
+                int avgColor = colorUtility.getAverageColor(cropBitmap);
                 final String colorName = colorUtility.getColorNameFromColor(avgColor, currentColorRange);
+
                 canvas.drawColor(avgColor);
 
-                crop.recycle();
-                result.recycle();
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        textColor.setText(colorName);
-                        imageAverageColor.setImageBitmap(colorBitmap);
-                    }
-                });
+                setColorInfo(colorName, colorBitmap);
             }
         });
+    }
+
+    private Bitmap getPlainColorBitmap() {
+        int width = imageAverageColor.getWidth();
+        int height = imageAverageColor.getHeight();
+
+        return Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+    }
+
+    private void setColorInfo(final String colorName, final Bitmap colorBitmap) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textColor.setText(colorName);
+                imageAverageColor.setImageBitmap(colorBitmap);
+            }
+        });
+    }
+
+    private Bitmap getCropBitmap(byte[] picture) {
+        final Bitmap result = BitmapFactory.decodeByteArray(picture, 0, picture.length);
+        final RectF maskRect = cameraMask.getCurrentMaskRect();
+
+        int height = result.getHeight();
+        int width = result.getWidth();
+        int mWidth = (int) maskRect.width();
+        int mHeight = (int) maskRect.height();
+
+        return Bitmap.createBitmap(result, (width / 2) - mWidth / 2, (height / 2) - mHeight / 2, mWidth, mHeight);
     }
 
 

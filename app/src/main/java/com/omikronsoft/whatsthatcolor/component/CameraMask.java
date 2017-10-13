@@ -2,7 +2,6 @@ package com.omikronsoft.whatsthatcolor.component;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
@@ -36,7 +35,7 @@ public class CameraMask {
         return currentMaskRect;
     }
 
-    public Bitmap getMaskBitmap(int maskScale){
+    public Bitmap getMaskBitmap(int maskScale) {
         return getBitmapWithMask(getValidScale(maskScale));
     }
 
@@ -59,19 +58,19 @@ public class CameraMask {
         return bitmap;
     }
 
-    private int getValidScale(int maskScale){
+    private int getValidScale(int maskScale) {
         return maskScale < MIN_MASK_SCALE_PERCENT ? MIN_MASK_SCALE_PERCENT : (maskScale > MAX_MASK_SCALE_PERCENT ? MAX_MASK_SCALE_PERCENT : maskScale);
     }
 
-    private void prepareBackgroundConstants(){
+    private void prepareBackgroundConstants() {
         width = cameraMaskBackground.getWidth();
-        width2 = width/2;
+        width2 = width / 2;
 
         height = cameraMaskBackground.getHeight();
-        height2 = height/2;
+        height2 = height / 2;
     }
 
-    private void preparePaint(){
+    private void preparePaint() {
         paint.setColor(paintColor);
         paint.setStrokeWidth(PAINT_STROKE_WIDTH);
     }
