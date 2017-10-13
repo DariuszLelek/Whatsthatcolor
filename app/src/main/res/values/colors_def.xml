@@ -430,7 +430,7 @@
         <item>#eed5b7</item>
         <item>#cdb79e</item>
         <item>#8b7d6b</item>
-        <item>#000000</item>
+        <item>#0a0a0a</item>
         <item>#ffebcd</item>
         <item>#0000ff</item>
         <item>#0000ee</item>
@@ -813,7 +813,7 @@
         <item>#eed8ae</item>
         <item>#cdba96</item>
         <item>#8b7e66</item>
-        <item>#ffffff</item>
+        <item>#fafafa</item>
         <item>#f5f5f5</item>
         <item>#ffff00</item>
         <item>#eeee00</item>
@@ -834,13 +834,13 @@
         <item>lime</item>
         <item>pink</item>
         <item>teal</item>
-        <item>lavender</item>
+        <!--<item>lavender</item>-->
         <item>brown</item>
-        <item>beige</item>
-        <item>maroon</item>
-        <item>mint</item>
+        <!--<item>beige</item>-->
+        <!--<item>maroon</item>-->
+        <!--<item>mint</item>-->
         <item>olive</item>
-        <item>coral</item>
+        <!--<item>coral</item>-->
         <item>navy</item>
         <!--<item>grey</item>-->
         <item>white</item>
@@ -849,25 +849,25 @@
     <string-array name="color_min_value">
         <item>#e6194b</item>
         <item>#3cb44b</item>
-        <item>#ffe119</item>
+        <item>#ffe223</item>
         <item>#0082c8</item>
         <item>#f58231</item>
         <item>#911eb4</item>
         <item>#46f0f0</item>
         <item>#f032e6</item>
         <item>#d2f53c</item>
-        <item>#fabebe</item>
+        <item>#ff62b0</item>
         <item>#008080</item>
-        <item>#e6beff</item>
+        <!--<item>#e6beff</item>-->
         <item>#aa6e28</item>
-        <item>#fffac8</item>
-        <item>#800000</item>
-        <item>#aaffc3</item>
+        <!--<item>#fffac8</item>-->
+        <!--<item>#800000</item>-->
+        <!--<item>#aaffc3</item>-->
         <item>#808000</item>
-        <item>#ffd8b1</item>
+        <!--<item>#ffd8b1</item>-->
         <item>#000080</item>
         <!--<item>#808080</item>-->
-        <item>#FFFFFF</item>
-        <item>#000000</item>
+        <item>#e4e4e4</item>
+        <item>#0a0a0a</item>
     </string-array>
 </resources>
