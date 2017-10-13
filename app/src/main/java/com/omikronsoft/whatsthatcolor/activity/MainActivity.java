@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -20,6 +21,7 @@ import android.widget.ToggleButton;
 import com.flurgle.camerakit.CameraListener;
 import com.flurgle.camerakit.CameraView;
 import com.omikronsoft.whatsthatcolor.R;
+import com.omikronsoft.whatsthatcolor.ad.AdHolder;
 import com.omikronsoft.whatsthatcolor.component.CameraMask;
 import com.omikronsoft.whatsthatcolor.utility.color.ColorRange;
 import com.omikronsoft.whatsthatcolor.utility.color.ColorUtility;
@@ -60,9 +62,15 @@ public class MainActivity extends AppCompatActivity {
         maskSeekBar = (SeekBar) findViewById(R.id.seek_mask_size);
         textColor = (TextView) findViewById(R.id.text_color);
 
+        prepareAds();
         prepareImageMask();
         prepareItemsWithListeners();
         prepareSeekBar();
+    }
+
+    private void prepareAds(){
+        LinearLayout add_holder = (LinearLayout) findViewById(R.id.layout_ad_holder);
+        add_holder.addView(AdHolder.getInstance().getAdView(getApplicationContext(), getResources()));
     }
 
     private void prepareImageMask() {
@@ -232,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void finishActivity(){
+        AdHolder.getInstance().destroy();
         toggleButton.setChecked(false);
         shutDownExecutor();
         cameraView.stop();
