@@ -65,7 +65,6 @@ public class AdHolder extends Application{
     public void destroy(){
         if(adView != null){
             adView.destroy();
-            adView = null;
         }
     }
 
