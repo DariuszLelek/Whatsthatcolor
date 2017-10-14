@@ -59,13 +59,13 @@ public class MainActivity extends AppCompatActivity {
         colorUtility = new ColorUtility(getApplicationContext());
 
         imageAverageColor = (ImageView) findViewById(R.id.image_average_color);
-        maskSeekBar = (SeekBar) findViewById(R.id.seek_mask_size);
         textColor = (TextView) findViewById(R.id.text_color);
+        imageMask = (ImageView) findViewById(R.id.image_mask);
 
         prepareAds();
-        prepareImageMask();
         prepareItemsWithListeners();
-        prepareSeekBar();
+
+        updateCameraMask();
     }
 
     private void prepareAds(){
@@ -73,15 +73,24 @@ public class MainActivity extends AppCompatActivity {
         add_holder.addView(AdHolder.getInstance().getAdView(getApplicationContext(), getResources()));
     }
 
-    private void prepareImageMask() {
-        imageMask = (ImageView) findViewById(R.id.image_mask);
+    private void updateCameraMask() {
         imageMask.post(new Runnable() {
             @Override
             public void run() {
-                int maskColor = ContextCompat.getColor(getApplicationContext(), R.color.color_mask_rectangle);
-                cameraMask = new CameraMask(ViewUtility.getBitmapFromView(imageMask), maskColor);
+                if(cameraMask == null){
+                    int maskColor = ContextCompat.getColor(getApplicationContext(), R.color.color_mask_rectangle);
+                    Bitmap cameraMaskBackground = ViewUtility.getBitmapFromView(imageMask);
+                    if(cameraMaskBackground != null){
+                        cameraMask = new CameraMask(cameraMaskBackground, maskColor);
+                        updateMaskWithProgress(maskSeekBar.getProgress());
+                    }
+                }
             }
         });
+    }
+
+    private void updateMaskWithProgress(int progress){
+        ViewUtility.updateViewWithCameraMaskValue(imageMask, cameraMask, progress);
     }
 
     private void prepareItemsWithListeners() {
@@ -96,6 +105,9 @@ public class MainActivity extends AppCompatActivity {
         cameraView = (CameraView) findViewById(R.id.camera_view);
         cameraView.setMethod(METHOD_STILL);
         prepareCameraViewListener(cameraView);
+
+        maskSeekBar = (SeekBar) findViewById(R.id.seek_mask_size);
+        prepareMaskSeekBarListener(maskSeekBar);
     }
 
     private void requestPermissions() {
@@ -108,13 +120,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void prepareSeekBar() {
-        maskSeekBar.setMax((CameraMask.MAX_MASK_SCALE_PERCENT));
+    private void prepareMaskSeekBarListener(SeekBar maskSeekBar) {
         maskSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (ViewUtility.canUpdate(imageMask, cameraMaskUpdateDelayMS)) {
-                    ViewUtility.updateViewWithCameraMaskValue(imageMask, cameraMask, progress);
+                    updateMaskWithProgress(progress);
                 }
             }
 
@@ -125,18 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                ViewUtility.updateViewWithCameraMaskValue(imageMask, cameraMask, maskSeekBar.getProgress());
-            }
-        });
-
-        setSeekBarDefaultPosition();
-    }
-
-    private void setSeekBarDefaultPosition() {
-        maskSeekBar.post(new Runnable() {
-            @Override
-            public void run() {
-                maskSeekBar.setProgress(maskSeekBar.getMax() / 2);
+                updateMaskWithProgress(seekBar.getProgress());
             }
         });
     }
@@ -173,21 +173,25 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    executor = Executors.newScheduledThreadPool(1);
-                    executor.scheduleAtFixedRate(new Runnable() {
-                        @Override
-                        public void run() {
-                            cameraView.captureImage();
-                        }
-                    }, 0, cameraCapturePictureDelayMS, TimeUnit.MILLISECONDS);
+                    startCapture();
                 } else {
-                    shutDownExecutor();
+                    stopCapture();
                 }
             }
         });
     }
 
-    private void shutDownExecutor() {
+    private void startCapture(){
+        executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                cameraView.captureImage();
+            }
+        }, 0, cameraCapturePictureDelayMS, TimeUnit.MILLISECONDS);
+    }
+
+    private void stopCapture(){
         if (executor != null && !executor.isShutdown()) {
             executor.shutdownNow();
         }
@@ -241,8 +245,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void finishActivity(){
         AdHolder.getInstance().destroy();
+
+        stopCapture();
         toggleButton.setChecked(false);
-        shutDownExecutor();
+
         cameraView.stop();
         finish();
     }
@@ -251,12 +257,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         cameraView.start();
+        updateCameraMask();
     }
 
     @Override
     protected void onPause() {
-        // TODO check if can be done without finishing activity (got problems with on resume otherwise)
-        finishActivity();
+        stopCapture();
+        toggleButton.setChecked(false);
+
+        cameraView.stop();
         super.onPause();
     }
 }

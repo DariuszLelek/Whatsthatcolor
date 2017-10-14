@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Dariusz Lelek on 10/11/2017.
@@ -17,7 +18,7 @@ import java.util.Map;
  */
 
 public class ViewUtility {
-    private final static Map<View, DateTime> viewLastUpdate = new HashMap<>();
+    private final static Map<View, DateTime> viewLastUpdate = new ConcurrentHashMap<>();
 
     public static Bitmap getBitmapFromView(View view) {
         Bitmap bitmap;
@@ -28,8 +29,10 @@ public class ViewUtility {
     }
 
     public static void updateViewWithCameraMaskValue(ImageView view, CameraMask cameraMask, int value) {
-        view.setImageBitmap(cameraMask.getMaskBitmap(value));
-        viewLastUpdate.put(view, DateTime.now());
+        if(cameraMask != null){
+            view.setImageBitmap(cameraMask.getMaskBitmap(value));
+            viewLastUpdate.put(view, DateTime.now());
+        }
     }
 
     public static boolean canUpdate(View view, int delayMS) {

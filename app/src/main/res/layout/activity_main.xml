@@ -93,14 +93,17 @@
                 android:id="@+id/seek_mask_size"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:max="@integer/progress_max"
                 android:paddingBottom="6dp"
-                android:paddingTop="6dp"/>
+                android:paddingTop="6dp"
+                android:progress="@integer/progress_default"/>
 
             <ToggleButton
                 android:id="@+id/toggle_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
+                android:checked="false"
                 android:fontFamily="serif"
                 android:paddingBottom="24dp"
                 android:paddingTop="6dp"
