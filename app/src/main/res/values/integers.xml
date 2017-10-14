@@ -2,7 +2,4 @@
 <resources>
     <integer name="progress_max">50</integer>
     <integer name="progress_default">25</integer>
-
-    <integer name="camera_mask_update_delay_ms">200</integer>
-    <integer name="camera_capture_picture_delay_ms">500</integer>
 </resources>

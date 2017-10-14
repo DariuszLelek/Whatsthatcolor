@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.RectF;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -14,14 +15,18 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.flurgle.camerakit.CameraListener;
 import com.flurgle.camerakit.CameraView;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.omikronsoft.whatsthatcolor.R;
-import com.omikronsoft.whatsthatcolor.ad.AdHolder;
 import com.omikronsoft.whatsthatcolor.component.CameraMask;
 import com.omikronsoft.whatsthatcolor.utility.color.ColorRange;
 import com.omikronsoft.whatsthatcolor.utility.color.ColorUtility;
@@ -47,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView textColor;
     private ScheduledExecutorService executor;
     private ColorUtility colorUtility;
+    private AdView adView;
 
     private ColorRange currentColorRange = ColorRange.MAX;
 
@@ -69,11 +75,6 @@ public class MainActivity extends AppCompatActivity {
         updateCameraMask();
     }
 
-    private void prepareAds(){
-        LinearLayout add_holder = (LinearLayout) findViewById(R.id.layout_ad_holder);
-        add_holder.addView(AdHolder.getInstance().getAdView(getApplicationContext(), getResources()));
-    }
-
     private void updateCameraMask() {
         imageMask.post(new Runnable() {
             @Override
@@ -88,6 +89,37 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void prepareAds(){
+        LinearLayout add_holder = (LinearLayout) findViewById(R.id.layout_ad_holder);
+        add_holder.addView(getAdView());
+    }
+
+    private AdView getAdView(){
+        if(adView == null){
+            MobileAds.initialize(getApplicationContext(), getResources().getString(R.string.app_id));
+
+            RelativeLayout.LayoutParams adParams = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+            adParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            adParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+
+            adView = new AdView(getApplicationContext());
+            adView.setAdSize(AdSize.BANNER);
+            adView.setAdUnitId(getResources().getString(R.string.add_unit_id));
+            adView.setBackgroundColor(Color.TRANSPARENT);
+            adView.setLayoutParams(adParams);
+
+            // Test Ads
+            // AdRequest adRequest = new AdRequest.Builder().addTestDevice(getResources().getString(R.string.test_device_id)).build();
+            AdRequest adRequest = new AdRequest.Builder().build();
+
+            adView.loadAd(adRequest);
+        }
+
+        return adView;
     }
 
     private void updateMaskWithProgress(int progress){
@@ -125,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
         maskSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (ViewUtility.canUpdate(imageMask, R.integer.camera_mask_update_delay_ms)) {
+                if (ViewUtility.canUpdate(imageMask, 200)) {
                     updateMaskWithProgress(progress);
                 }
             }
@@ -189,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 cameraView.captureImage();
             }
-        }, 0, R.integer.camera_capture_picture_delay_ms, TimeUnit.MILLISECONDS);
+        }, 0, 500, TimeUnit.MILLISECONDS);
     }
 
     private void stopCapture(){
@@ -245,7 +277,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void finishActivity(){
-        AdHolder.getInstance().destroy();
+        if(adView != null){
+            adView.destroy();
+        }
 
         stopCapture();
         toggleButton.setChecked(false);
