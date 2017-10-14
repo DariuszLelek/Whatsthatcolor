@@ -8,7 +8,6 @@ import com.omikronsoft.whatsthatcolor.component.CameraMask;
 
 import org.joda.time.DateTime;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 

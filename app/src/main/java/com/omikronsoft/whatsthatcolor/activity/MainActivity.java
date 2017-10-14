@@ -33,6 +33,11 @@ import java.util.concurrent.TimeUnit;
 
 import static com.flurgle.camerakit.CameraKit.Constants.METHOD_STILL;
 
+/**
+ * Created by Dariusz Lelek on 10/11/2017.
+ * dariusz.lelek@gmail.com
+ */
+
 public class MainActivity extends AppCompatActivity {
     private ImageView imageAverageColor, imageColor, imageMask;
     private CameraView cameraView;
@@ -40,10 +45,6 @@ public class MainActivity extends AppCompatActivity {
     private SeekBar maskSeekBar;
     private ToggleButton toggleButton;
     private TextView textColor;
-
-    private final int cameraMaskUpdateDelayMS = 200;
-    private final int cameraCapturePictureDelayMS = 500;
-
     private ScheduledExecutorService executor;
     private ColorUtility colorUtility;
 
@@ -124,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         maskSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (ViewUtility.canUpdate(imageMask, cameraMaskUpdateDelayMS)) {
+                if (ViewUtility.canUpdate(imageMask, R.integer.camera_mask_update_delay_ms)) {
                     updateMaskWithProgress(progress);
                 }
             }
@@ -188,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 cameraView.captureImage();
             }
-        }, 0, cameraCapturePictureDelayMS, TimeUnit.MILLISECONDS);
+        }, 0, R.integer.camera_capture_picture_delay_ms, TimeUnit.MILLISECONDS);
     }
 
     private void stopCapture(){

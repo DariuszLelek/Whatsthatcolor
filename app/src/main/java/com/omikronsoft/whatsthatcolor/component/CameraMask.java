@@ -11,8 +11,7 @@ import android.graphics.RectF;
  */
 
 public class CameraMask {
-    public final static int MAX_MASK_SCALE_PERCENT = 50;
-
+    private final static int MAX_MASK_SCALE_PERCENT = 50;
     private final static int MIN_MASK_SCALE_PERCENT = 1;
     private final static float PAINT_STROKE_WIDTH = 3F;
 
